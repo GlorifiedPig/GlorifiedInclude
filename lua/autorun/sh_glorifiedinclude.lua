@@ -38,7 +38,7 @@ end
 function GlorifiedInclude.IncludeFolder( folderName, ignoreFiles, ignoreFolders )
     if( string.Right( folderName, 1 ) != "/" ) then folderName = folderName .. "/" end
 
-    local filesInFolder, foldersInFolder = fild.Find( folderName .. "*", "LUA" )
+    local filesInFolder, foldersInFolder = file.Find( folderName .. "*", "LUA" )
 
     if !ignoreFiles then
         for k, v in ipairs( filesInFolder ) do
