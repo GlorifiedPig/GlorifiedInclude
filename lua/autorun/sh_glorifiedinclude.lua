@@ -1,4 +1,6 @@
 
+local IsAddon = true -- Set this to 'true' if you're running from an addon, set to 'false' if you're running from a gamemode.
+
 --[[
     GlorifiedInclude - A module for including files & folders with ease.
     © 2020, GlorifiedInclude Developers
@@ -19,14 +21,17 @@ GlorifiedInclude = {
 }
 
 function GlorifiedInclude.IncludeFile( fileName )
+    local gamemodeRoot = ""
+    if IsAddon == false then gamemodeRoot = GM.FolderName .. "/gamemode/" end 
+
     if( fileName:find( "sh_" ) ) then
-        if SERVER then AddCSLuaFile( fileName ) end
-        include( fileName )
+        if SERVER then AddCSLuaFile( gamemodeRoot .. fileName ) end
+        include( gamemodeRoot .. fileName )
     elseif SERVER && fileName:find( "sv_" ) then
-        include( fileName )
+        include( gamemodeRoot .. fileName )
     elseif fileName:find( "cl_" ) then
-        if SERVER then AddCSLuaFile( fileName )
-        else include( fileName ) end
+        if SERVER then AddCSLuaFile( gamemodeRoot .. fileName )
+        else include( gamemodeRoot .. fileName ) end
     end
 end
 
