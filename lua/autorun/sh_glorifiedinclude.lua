@@ -3,7 +3,7 @@ local IsAddon = true -- Set this to 'true' if you're running from an addon, set 
 
 --[[
     GlorifiedInclude - A module for including files & folders with ease.
-    © 2020, GlorifiedInclude Developers
+    © 2020 GlorifiedInclude Developers
 
     Please read usage guide @ https://github.com/GlorifiedPig/glorifiedinclude/blob/master/README.md
 
@@ -51,3 +51,10 @@ function GlorifiedInclude.IncludeFolder( folderName, ignoreFiles, ignoreFolders 
         end
     end
 end
+
+--[[
+    -- Common practice would be to put all your includes here, for example:
+        GlorifiedInclude.IncludeFolder( "modules/" )
+        GlorifiedInclude.IncludeFile( "sh_config.lua" )
+    -- Remember that files load in the order you include them in.
+]]--
