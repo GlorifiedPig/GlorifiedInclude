@@ -2,7 +2,7 @@
 local IsAddon = true -- Set this to 'true' if you're running from an addon, set to 'false' if you're running from a gamemode.
 
 --[[
-    GlorifiedInclude - A module for including files & folders with ease.
+    GlorifiedInclude - A library for including files & folders with ease.
     © 2020 GlorifiedInclude Developers
 
     Please read usage guide @ https://github.com/GlorifiedPig/glorifiedinclude/blob/master/README.md
@@ -17,18 +17,23 @@ local giVersion = 1.0
 if GlorifiedInclude or GlorifiedInclude.Version > giVersion then return end
 
 GlorifiedInclude = {
-    Version = giVersion
+    Version = giVersion,
+    Realm = {
+        Server = 0,
+        Client = 1,
+        Shared = 2
+    }
 }
 
-function GlorifiedInclude.IncludeFile( fileName )
+function GlorifiedInclude.IncludeFile( fileName, realm )
     if IsAddon == false then fileName = GM.FolderName .. "/gamemode/" .. fileName end 
 
-    if( fileName:find( "sh_" ) ) then
+    if( realm == GlorifiedInclude.Realm.Shared || fileName:find( "sh_" ) ) then
         if SERVER then AddCSLuaFile( fileName ) end
         include( fileName )
-    elseif SERVER && fileName:find( "sv_" ) then
+    elseif( realm == GlorifiedInclude.Realm.Server || ( SERVER && fileName:find( "sv_" ) ) ) then
         include( fileName )
-    elseif fileName:find( "cl_" ) then
+    elseif( realm == GlorifiedInclude.Realm.Client || fileName:find( "cl_" ) ) then
         if SERVER then AddCSLuaFile( fileName )
         else include( fileName ) end
     end
