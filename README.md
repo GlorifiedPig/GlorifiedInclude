@@ -39,7 +39,7 @@ Here's an example including a file called `sv_test.lua` and a folder called `mod
 GlorifiedInclude.IncludeFile( "sv_test.lua" )
 GlorifiedInclude.IncludeFolder( "test/modules/ )
 ```
-## Including all files at once
+### Including all files at once
 If you'd like to include all files at once, you have to place all your includes at the bottom of your GlorifiedInclude file. If you'd like to keep your includes seperate, you can create a new shared file and simply include the library.
 
 Please keep in mind that your files will load in the order you include them in.
