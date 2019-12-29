@@ -14,47 +14,49 @@ local IsAddon = true -- Set this to 'true' if you're running from an addon, set 
 
 local giVersion = 1.0
 
-if GlorifiedInclude or GlorifiedInclude.Version > giVersion then return end
+if !GlorifiedInclude or GlorifiedInclude.Version < giVersion then
 
-GlorifiedInclude = {
-    Version = giVersion,
-    Realm = {
-        Server = 0,
-        Client = 1,
-        Shared = 2
+    GlorifiedInclude = {
+        Version = giVersion,
+        Realm = {
+            Server = 0,
+            Client = 1,
+            Shared = 2
+        }
     }
-}
 
-function GlorifiedInclude.IncludeFile( fileName, realm )
-    if IsAddon == false then fileName = GM.FolderName .. "/gamemode/" .. fileName end 
+    function GlorifiedInclude.IncludeFile( fileName, realm )
+        if IsAddon == false then fileName = GM.FolderName .. "/gamemode/" .. fileName end 
 
-    if( realm == GlorifiedInclude.Realm.Shared || fileName:find( "sh_" ) ) then
-        if SERVER then AddCSLuaFile( fileName ) end
-        include( fileName )
-    elseif( realm == GlorifiedInclude.Realm.Server || ( SERVER && fileName:find( "sv_" ) ) ) then
-        include( fileName )
-    elseif( realm == GlorifiedInclude.Realm.Client || fileName:find( "cl_" ) ) then
-        if SERVER then AddCSLuaFile( fileName )
-        else include( fileName ) end
-    end
-end
-
-function GlorifiedInclude.IncludeFolder( folderName, ignoreFiles, ignoreFolders )
-    if( string.Right( folderName, 1 ) != "/" ) then folderName = folderName .. "/" end
-
-    local filesInFolder, foldersInFolder = file.Find( folderName .. "*", "LUA" )
-
-    if ignoreFiles != true then
-        for k, v in ipairs( filesInFolder ) do
-            GlorifiedInclude.IncludeFile( folderName .. v )
+        if( realm == GlorifiedInclude.Realm.Shared || fileName:find( "sh_" ) ) then
+            if SERVER then AddCSLuaFile( fileName ) end
+            include( fileName )
+        elseif( realm == GlorifiedInclude.Realm.Server || ( SERVER && fileName:find( "sv_" ) ) ) then
+            include( fileName )
+        elseif( realm == GlorifiedInclude.Realm.Client || fileName:find( "cl_" ) ) then
+            if SERVER then AddCSLuaFile( fileName )
+            else include( fileName ) end
         end
     end
 
-    if ignoreFolders != true then
-        for k, v in ipairs( foldersInFolder ) do
-            GlorifiedInclude.IncludeFolder( folderName .. v .. "/" )
+    function GlorifiedInclude.IncludeFolder( folderName, ignoreFiles, ignoreFolders )
+        if( string.Right( folderName, 1 ) != "/" ) then folderName = folderName .. "/" end
+
+        local filesInFolder, foldersInFolder = file.Find( folderName .. "*", "LUA" )
+
+        if ignoreFiles != true then
+            for k, v in ipairs( filesInFolder ) do
+                GlorifiedInclude.IncludeFile( folderName .. v )
+            end
+        end
+
+        if ignoreFolders != true then
+            for k, v in ipairs( foldersInFolder ) do
+                GlorifiedInclude.IncludeFolder( folderName .. v .. "/" )
+            end
         end
     end
+
 end
 
 --[[
