@@ -21,17 +21,16 @@ GlorifiedInclude = {
 }
 
 function GlorifiedInclude.IncludeFile( fileName )
-    local gamemodeRoot = ""
-    if IsAddon == false then gamemodeRoot = GM.FolderName .. "/gamemode/" end 
+    if IsAddon == false then fileName = GM.FolderName .. "/gamemode/" .. fileName end 
 
     if( fileName:find( "sh_" ) ) then
-        if SERVER then AddCSLuaFile( gamemodeRoot .. fileName ) end
-        include( gamemodeRoot .. fileName )
+        if SERVER then AddCSLuaFile( fileName ) end
+        include( fileName )
     elseif SERVER && fileName:find( "sv_" ) then
-        include( gamemodeRoot .. fileName )
+        include( fileName )
     elseif fileName:find( "cl_" ) then
-        if SERVER then AddCSLuaFile( gamemodeRoot .. fileName )
-        else include( gamemodeRoot .. fileName ) end
+        if SERVER then AddCSLuaFile( fileName )
+        else include( fileName ) end
     end
 end
 
@@ -40,13 +39,13 @@ function GlorifiedInclude.IncludeFolder( folderName, ignoreFiles, ignoreFolders 
 
     local filesInFolder, foldersInFolder = file.Find( folderName .. "*", "LUA" )
 
-    if !ignoreFiles then
+    if ignoreFiles != true then
         for k, v in ipairs( filesInFolder ) do
             GlorifiedInclude.IncludeFile( folderName .. v )
         end
     end
 
-    if !ignoreFolders then
+    if !ignoreFolders != true then
         for k, v in ipairs( foldersInFolder ) do
             GlorifiedInclude.IncludeFolder( folderName .. v .. "/" )
         end
