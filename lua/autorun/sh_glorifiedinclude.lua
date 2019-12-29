@@ -25,17 +25,23 @@ if !GlorifiedInclude or GlorifiedInclude.Version < giVersion then
         }
     }
 
+    local _include = include
+    local _AddCSLuaFile = AddCSLuaFile
+    local _SERVER = SERVER
+
+    local _GlorifiedInclude_Realm = GlorifiedInclude.Realm
+
     function GlorifiedInclude.IncludeFile( fileName, realm )
         if IsAddon == false then fileName = GM.FolderName .. "/gamemode/" .. fileName end 
 
-        if( realm == GlorifiedInclude.Realm.Shared || fileName:find( "sh_" ) ) then
-            if SERVER then AddCSLuaFile( fileName ) end
-            include( fileName )
-        elseif( realm == GlorifiedInclude.Realm.Server || ( SERVER && fileName:find( "sv_" ) ) ) then
-            include( fileName )
-        elseif( realm == GlorifiedInclude.Realm.Client || fileName:find( "cl_" ) ) then
-            if SERVER then AddCSLuaFile( fileName )
-            else include( fileName ) end
+        if( realm == _GlorifiedInclude_Realm.Shared || fileName:find( "sh_" ) ) then
+            if _SERVER then _AddCSLuaFile( fileName ) end
+            _include( fileName )
+        elseif( realm == _GlorifiedInclude_Realm.Server || ( _SERVER && fileName:find( "sv_" ) ) ) then
+            _include( fileName )
+        elseif( realm == _GlorifiedInclude_Realm.Client || fileName:find( "cl_" ) ) then
+            if _SERVER then _AddCSLuaFile( fileName )
+            else _include( fileName ) end
         end
     end
 
