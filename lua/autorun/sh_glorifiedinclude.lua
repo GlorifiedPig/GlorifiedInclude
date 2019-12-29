@@ -45,7 +45,7 @@ function GlorifiedInclude.IncludeFolder( folderName, ignoreFiles, ignoreFolders 
         end
     end
 
-    if !ignoreFolders != true then
+    if ignoreFolders != true then
         for k, v in ipairs( foldersInFolder ) do
             GlorifiedInclude.IncludeFolder( folderName .. v .. "/" )
         end
