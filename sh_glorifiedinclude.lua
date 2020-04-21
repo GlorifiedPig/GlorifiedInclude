@@ -34,7 +34,7 @@ if !GlorifiedInclude or GlorifiedInclude.Version < giVersion then
     local includedFiles = {}
     function GlorifiedInclude.IncludeFile( fileName, realm, forceInclude, calledFromFolder )
         if IsAddon == false && not calledFromFolder then fileName = GM.FolderName .. "/gamemode/" .. fileName end
-        if not forceInclude and table.HasValue( includedFiles[fileName] ) then return end
+        if not forceInclude and table.HasValue( includedFiles, fileName ) then return end
         table.insert( includedFiles, fileName )
 
         if( realm == _GlorifiedInclude_Realm.Shared || fileName:find( "sh_" ) ) then
