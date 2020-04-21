@@ -18,18 +18,20 @@ After that, set `IsAddon` to `false` at the top of the file.
 
 # Functions
 ```lua
-GlorifiedInclude.IncludeFile( fileName :: string, realm :: int )
+GlorifiedInclude.IncludeFile( fileName :: string, realm :: int, forceInclude :: bool )
 ```
 - Replace `fileName` with the path to the file you would like to include. Be sure to include the `.lua` extension at the end.
 - If you do not follow the `sv_`, `cl_` and `sh_` naming system, specify the `realm` to either be `GlorifiedInclude.Realm.Server`, `GlorifiedInclude.Realm.Client` or `GlorifiedInclude.Realm.Shared`.
+- If `forceInclude` is set to `true`, the file will be included even if it's been included before.
 
 ```lua
-GlorifiedInclude.IncludeFolder( folderName :: string, ignoreFiles :: bool, ignoreFolders :: bool )
+GlorifiedInclude.IncludeFolder( folderName :: string, ignoreFiles :: bool, ignoreFolders :: bool, forceInclude :: bool )
 ```
 - Replace `folderName` with the path to the folder.
 - To ignore files in that folder, replace `ignoreFiles` with `true`. Leave empty or set to `false` to include files.
 - To ignore folders in that folder, replace `ignoreFolders` with `true`. Leave empty or set to `false` to include folders.
 - Please remember that all files in folders **have** to follow the `sv_`, `cl_` and `sh_` naming system else the file won't be included!
+- If `forceInclude` is set to `true`, the files will be included even if it's been included before.
 
 # Examples
 The file path is relative to your addon's `lua` folder or your gamemode's `gamemode` folder.

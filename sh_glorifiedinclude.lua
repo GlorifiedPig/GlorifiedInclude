@@ -12,7 +12,7 @@ local IsAddon = true -- Set this to 'true' if you're running from an addon, set 
     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ]]--
 
-local giVersion = 1.0
+local giVersion = 1.1
 
 if !GlorifiedInclude or GlorifiedInclude.Version < giVersion then
 
@@ -31,8 +31,11 @@ if !GlorifiedInclude or GlorifiedInclude.Version < giVersion then
 
     local _GlorifiedInclude_Realm = GlorifiedInclude.Realm
 
-    function GlorifiedInclude.IncludeFile( fileName, realm )
-        if IsAddon == false then fileName = GM.FolderName .. "/gamemode/" .. fileName end 
+    local includedFiles = {}
+    function GlorifiedInclude.IncludeFile( fileName, realm, forceInclude, calledFromFolder )
+        if IsAddon == false && not calledFromFolder then fileName = GM.FolderName .. "/gamemode/" .. fileName end
+        if not forceInclude and table.HasValue( includedFiles[fileName] ) then return end
+        table.insert( includedFiles, fileName )
 
         if( realm == _GlorifiedInclude_Realm.Shared || fileName:find( "sh_" ) ) then
             if _SERVER then _AddCSLuaFile( fileName ) end
@@ -45,20 +48,24 @@ if !GlorifiedInclude or GlorifiedInclude.Version < giVersion then
         end
     end
 
-    function GlorifiedInclude.IncludeFolder( folderName, ignoreFiles, ignoreFolders )
+    function GlorifiedInclude.IncludeFolder( folderName, ignoreFiles, ignoreFolders, forceInclude )
+        if IsAddon == false then folderName = GM.FolderName .. "/gamemode/" .. folderName end
+
         if( string.Right( folderName, 1 ) != "/" ) then folderName = folderName .. "/" end
 
         local filesInFolder, foldersInFolder = file.Find( folderName .. "*", "LUA" )
 
+        if forceInclude == nil then forceInclude = false end
+
         if ignoreFiles != true then
             for k, v in ipairs( filesInFolder ) do
-                GlorifiedInclude.IncludeFile( folderName .. v )
+                GlorifiedInclude.IncludeFile( folderName .. v, nil, forceInclude, true )
             end
         end
 
         if ignoreFolders != true then
             for k, v in ipairs( foldersInFolder ) do
-                GlorifiedInclude.IncludeFolder( folderName .. v .. "/" )
+                GlorifiedInclude.IncludeFolder( folderName .. v .. "/", ignoreFiles, ignoreFolders, forceInclude )
             end
         end
     end
