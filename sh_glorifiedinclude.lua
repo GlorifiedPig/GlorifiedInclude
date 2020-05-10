@@ -41,18 +41,18 @@ if not GlorifiedInclude or GlorifiedInclude.Version < giVersion then
             if _SERVER then _AddCSLuaFile( fileName ) end
             _include( fileName )
             if printName then
-                print( "GlorifiedInclude > Loaded " .. printName .. " shared file '" .. fileName .. "'." )
+                print( printName .. " > Included SH file '" .. fileName .. "'" )
             end
         elseif realm == _GlorifiedInclude_Realm.Server or ( _SERVER and fileName:find( "sv_" ) ) then
             _include( fileName )
             if printName then
-                print( "GlorifiedInclude > Loaded " .. printName .. " serversided file '" .. fileName .. "'." )
+                print( printName .. " > Included SV file '" .. fileName .. "'" )
             end
         elseif realm == _GlorifiedInclude_Realm.Client or fileName:find( "cl_" ) then
             if _SERVER then _AddCSLuaFile( fileName )
             else _include( fileName ) end
             if printName then
-                print( "GlorifiedInclude > Loaded " .. printName .. " clientsided file '" .. fileName .. "'." )
+                print( printName .. " > Included CL file '" .. fileName .. "'" )
             end
         end
     end
