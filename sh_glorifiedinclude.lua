@@ -12,9 +12,9 @@ local IsAddon = true -- Set this to 'true' if you're running from an addon, set 
     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ]]--
 
-local giVersion = 1.1
+local giVersion = 1.2
 
-if !GlorifiedInclude or GlorifiedInclude.Version < giVersion then
+if not GlorifiedInclude or GlorifiedInclude.Version < giVersion then
 
     GlorifiedInclude = {
         Version = giVersion,
@@ -32,26 +32,35 @@ if !GlorifiedInclude or GlorifiedInclude.Version < giVersion then
     local _GlorifiedInclude_Realm = GlorifiedInclude.Realm
 
     local includedFiles = {}
-    function GlorifiedInclude.IncludeFile( fileName, realm, forceInclude, calledFromFolder )
-        if IsAddon == false && not calledFromFolder then fileName = GM.FolderName .. "/gamemode/" .. fileName end
+    function GlorifiedInclude.IncludeFile( fileName, realm, forceInclude, calledFromFolder, printName )
+        if IsAddon == false and not calledFromFolder then fileName = GM.FolderName .. "/gamemode/" .. fileName end
         if not forceInclude and table.HasValue( includedFiles, fileName ) then return end
         table.insert( includedFiles, fileName )
 
-        if( realm == _GlorifiedInclude_Realm.Shared || fileName:find( "sh_" ) ) then
+        if realm == _GlorifiedInclude_Realm.Shared or fileName:find( "sh_" ) then
             if _SERVER then _AddCSLuaFile( fileName ) end
             _include( fileName )
-        elseif( realm == _GlorifiedInclude_Realm.Server || ( _SERVER && fileName:find( "sv_" ) ) ) then
+            if printName then
+                print( "GlorifiedInclude > Loaded " .. printName .. " shared file '" .. fileName .. "'." )
+            end
+        elseif realm == _GlorifiedInclude_Realm.Server or ( _SERVER and fileName:find( "sv_" ) ) then
             _include( fileName )
-        elseif( realm == _GlorifiedInclude_Realm.Client || fileName:find( "cl_" ) ) then
+            if printName then
+                print( "GlorifiedInclude > Loaded " .. printName .. " serversided file '" .. fileName .. "'." )
+            end
+        elseif realm == _GlorifiedInclude_Realm.Client or fileName:find( "cl_" ) then
             if _SERVER then _AddCSLuaFile( fileName )
             else _include( fileName ) end
+            if printName then
+                print( "GlorifiedInclude > Loaded " .. printName .. " clientsided file '" .. fileName .. "'." )
+            end
         end
     end
 
-    function GlorifiedInclude.IncludeFolder( folderName, ignoreFiles, ignoreFolders, forceInclude )
+    function GlorifiedInclude.IncludeFolder( folderName, ignoreFiles, ignoreFolders, forceInclude, printName )
         if IsAddon == false then folderName = GM.FolderName .. "/gamemode/" .. folderName end
 
-        if( string.Right( folderName, 1 ) != "/" ) then folderName = folderName .. "/" end
+        if string.Right( folderName, 1 ) != "/" then folderName = folderName .. "/" end
 
         local filesInFolder, foldersInFolder = file.Find( folderName .. "*", "LUA" )
 
@@ -59,13 +68,13 @@ if !GlorifiedInclude or GlorifiedInclude.Version < giVersion then
 
         if ignoreFiles != true then
             for k, v in ipairs( filesInFolder ) do
-                GlorifiedInclude.IncludeFile( folderName .. v, nil, forceInclude, true )
+                GlorifiedInclude.IncludeFile( folderName .. v, nil, forceInclude, true, printName )
             end
         end
 
         if ignoreFolders != true then
             for k, v in ipairs( foldersInFolder ) do
-                GlorifiedInclude.IncludeFolder( folderName .. v .. "/", ignoreFiles, ignoreFolders, forceInclude )
+                GlorifiedInclude.IncludeFolder( folderName .. v .. "/", ignoreFiles, ignoreFolders, forceInclude, printName )
             end
         end
     end
