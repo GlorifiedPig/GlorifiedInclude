@@ -34,8 +34,8 @@ if not GlorifiedInclude or GlorifiedInclude.Version < giVersion then
     local includedFiles = {}
     function GlorifiedInclude.IncludeFile( fileName, realm, forceInclude, calledFromFolder, printName )
         if IsAddon == false and not calledFromFolder then fileName = GM.FolderName .. "/gamemode/" .. fileName end
-        if not forceInclude and table.HasValue( includedFiles, fileName ) then return end
-        table.insert( includedFiles, fileName )
+        if not forceInclude and includedFiles[fileName] then return end
+        includedFiles[fileName] = true
 
         if realm == _GlorifiedInclude_Realm.Shared or fileName:find( "sh_" ) then
             if _SERVER then _AddCSLuaFile( fileName ) end
