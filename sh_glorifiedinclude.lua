@@ -1,6 +1,7 @@
+
 local isAddon
 
-if debug.getinfo(1, "S").short_src[1] == "a" then
+if debug.getinfo( 1, "S" ).short_src[1] == "a" then
     isAddon = true
 end
 
