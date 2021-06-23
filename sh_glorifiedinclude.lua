@@ -1,5 +1,11 @@
+local isAddon
 
-local isAddon = true -- Set this to 'true' if you're running from an addon, set to 'false' if you're running from a gamemode.
+if debug.getinfo(1, "S").short_src[1] == "a" then
+    isAddon = true
+end
+
+-- Uncomment the line below to manually set this.
+--isAddon = true -- Set this to 'true' if you're running from an addon, set to 'false' if you're running from a gamemode.
 
 --[[
     GlorifiedInclude - A library for including files & folders with ease.
