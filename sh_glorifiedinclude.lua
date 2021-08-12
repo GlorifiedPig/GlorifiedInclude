@@ -1,13 +1,4 @@
 
-local isAddon
-
-if debug.getinfo( 1, "S" ).short_src[1] == "a" then
-    isAddon = true
-end
-
--- Uncomment the line below to manually set this.
---isAddon = true -- Set this to 'true' if you're running from an addon, set to 'false' if you're running from a gamemode.
-
 --[[
     GlorifiedInclude - A library for including files & folders with ease.
     © 2020 GlorifiedInclude Developers
@@ -19,10 +10,9 @@ end
     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ]]--
 
-local giVersion = 1.3
+local giVersion = 1.4
 
 if not GlorifiedInclude or GlorifiedInclude.Version < giVersion then
-
     GlorifiedInclude = {
         Version = giVersion,
         Realm = {
@@ -32,6 +22,7 @@ if not GlorifiedInclude or GlorifiedInclude.Version < giVersion then
         }
     }
 
+    local isAddon = debug.getinfo( 1, "S" ).short_src[1] == "a"
     local include = include
     local AddCSLuaFile = AddCSLuaFile
     local SERVER = SERVER
